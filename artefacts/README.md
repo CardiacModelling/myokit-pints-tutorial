@@ -22,9 +22,11 @@ In the second notebook we update the model to include the compensation circuitry
 
 In notebook number four we derive simplified models of the compensated voltage clamp setup, which can be used in fitting.
 
+## Summary [![github](../img/github.svg)](artefacts-5-summary.ipynb) [![nbviewer](../img/nbviewer.svg)](https://nbviewer.jupyter.org/github/CardiacModelling/fitting-notebooks/tree/artefacts/artefacts/artefacts-5-summary.ipynb)
+
+Finally, we present two simplified models (with currents in pA and currents in A/F), in equation & Myokit form.
+
 ## Appendices
-
-
 
 - Electronics
   - A1. Ideal op amps [![github](../img/github.svg)](appendix-A1-op-amp.ipynb) [![nbviewer](../img/nbviewer.svg)](https://nbviewer.jupyter.org/github/CardiacModelling/fitting-notebooks/tree/artefacts/artefacts/appendix-A1-op-amp.ipynb)
