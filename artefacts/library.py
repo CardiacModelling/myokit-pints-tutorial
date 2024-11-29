@@ -8,13 +8,13 @@ import numpy as np
 def _fit_exponential(t, I, Iss, i1, i2, cutoff, invert, plot=False):
     """
     Fits a single exponential to ``I - Iss`` on the segment ``i1:i2``.
-    
+
     The exponential is assumed to be decreasing. For an increasing exponential,
     set ``invert=True``.
-    
+
     If the signal on ``i1:i2`` dips below ``cutoff``, the upper bound ``i2``
     will be reduced.
-    
+
     Returns ``tau, I0``.
     """
 
@@ -60,12 +60,12 @@ def _fit_exponential(t, I, Iss, i1, i2, cutoff, invert, plot=False):
         plt.show()
 
     return tau, I0
-    
-    
+
+
 def _integrate_current(t, I, Iss, i0, i3, cutoff, dt, invert):
     """
     Integrates the I[i0:i3] and returns the result.
-    
+
     If the initial points are below cutoff, ``i0`` will be increased.
     """
     # Get segment containing transient
@@ -73,24 +73,24 @@ def _integrate_current(t, I, Iss, i0, i3, cutoff, dt, invert):
     if invert:
         iup = -iup
 
-    # Increase i0 if necessary    
+    # Increase i0 if necessary
     i = np.where(iup > cutoff)[0][0]
-    
+
     iup = iup[i:]
     i0 += i
-    
+
     # Integrate
     if dt is None:
         return np.trapz(iup, t[i0:i3])
     return np.trapz(iup, dx=dt)
-    
+
 
 def estimate_cell_parameters(
         t, I, T, dV, dt=None, f1=0.1, f2=0.8, f3=0.8, f4=1):
     """
-    
+
     Arguments:
-    
+
     ``t``
         A time vector, starting at 0 and going up to and/or including time 2T.
     ``I``
@@ -106,7 +106,7 @@ def estimate_cell_parameters(
         The start of the segment where an exponential is fit, as a fraction of
         ``T``.
     ``f2=0.8``
-        The end of the segment where an exponential is fit, as a fraction of 
+        The end of the segment where an exponential is fit, as a fraction of
         ``T``. If the given signal is noisy, a shorter interval may be used.
     ``f3=0.8``
         The start of the segment used to estimate the steady-state current, as
@@ -116,7 +116,7 @@ def estimate_cell_parameters(
         a fraction of ``T``.
 
     Returns:
-    
+
     ``Rs``
         The estimated series (or access) resistance.
     ``Rm``
@@ -129,7 +129,7 @@ def estimate_cell_parameters(
         steady-state values, ``I0`` are initial values for the fitted
         transients, and where the remaining numbers give array indices suitable
         for drawing fitted transients and steady states.
-       
+
     """
     # Get indices
     f = np.array((f1, f2, f3, f4, 1, 1 + f1, 1 + f2, 1 + f3, 1 + f4)) * T
@@ -137,21 +137,21 @@ def estimate_cell_parameters(
         i = np.searchsorted(t, f)
     else:
         i = np.rint(f / dt).astype(int)
-    i1, i2, i3, i4, iT, i5, i6, i7, i8 = i        
-        
+    i1, i2, i3, i4, iT, i5, i6, i7, i8 = i
+
     # Estimate I1 and I2
     I1 = np.mean(I[i3:i4])
     I2 = np.mean(I[i7:i8])
     dI = I1 - I2
-    
+
     # Estimate the noise
     cutoff = np.std(I[i3:i4]) + np.std(I[i7:i8])
-        
+
     # Estimate tau and I0
     tau1, I01 = _fit_exponential(t, I, I1, i1, i2, cutoff, False)
     tau2, I02 = _fit_exponential(t - T, I, I2, i5, i6, cutoff, True)
     tau = 0.5 * (tau1 + tau2)
-    
+
     # Estimate charge
     Q11 = _integrate_current(t, I, I1, 0, i3, cutoff, dt, False)
     Q12 = _integrate_current(t, I, I2, iT, i7, cutoff, dt, True)
@@ -161,10 +161,10 @@ def estimate_cell_parameters(
     Rs = tau * dV / Qm
     Rm = dV / dI - Rs
     Cm = Qm * (Rm + Rs) / (Rm * dV)
-    
+
     # Gather points for drawing
     points = (tau, I01, i1, i2, I1, i3, i4, I02, i5, i6, I2, i7, i8)
-    
+
     return Rs, Rm, Cm, points
 
 
@@ -173,7 +173,7 @@ def _test_one_shot():
 
     import myokit
     import matplotlib.pyplot as plt
-    
+
     m = myokit.parse_model('''
         [[model]]
         amp.Vm = -70
@@ -203,7 +203,7 @@ def _test_one_shot():
     p = myokit.Protocol()
     p.schedule(start=0, level=V1, duration=T, period=2*T)
     p.schedule(start=T, level=V2, duration=T, period=2*T)
-    
+
     if True:
         N = 2000
         dt = (2 * T) / N
@@ -211,21 +211,21 @@ def _test_one_shot():
     else:
         dt=None
         print('Using adaptive time steps')
-    
+
     s = myokit.Simulation(m, p)
     s.set_tolerance(1e-12, 1e-12)
     s.pre(2 * T)
     s.reset()
     d = s.run(2 * T, log_interval=dt).npview()
     t, I = d.time(), d['amp.I_obs']
-    
+
     #I += np.random.normal(0, 5, size=t.shape)
-    
+
     Rs, Rm, Cm, points = estimate_cell_parameters(t, I, T, dV, dt)
     print(f'Estimated Rs {1e3 * Rs:>5.1f} MOhm')
     print(f'Estimated Rm {1e3 * Rm:>5.1f} MOhm')
     print(f'Estimated Cm {Cm:>5.2f} pF')
-    
+
     fig = plt.figure(figsize=(12, 5))
     ax = fig.add_subplot()
     ax.plot(t, I, label='$Iobs$')
@@ -240,6 +240,44 @@ def _test_one_shot():
     plt.show()
 
 
-    
+def bode(magnitude, argument, axes=None, lo=1e-2, hi=1e5, **kwargs):
+    """
+    Creates a bode plot for the given ``magnitude`` and ``argument`` functions.
+
+    Returns a tuple ``(ax0, ax1)``.
+    """
+
+    lo, hi = np.log10(lo), np.log10(hi)
+    w = np.logspace(lo, hi, 1001, base=np.e)
+
+    if axes is None:
+        import matplotlib.pyplot as plt
+        fig = plt.figure(figsize=(9, 6))
+        fig.subplots_adjust(hspace=0.2)
+        ax0 = fig.add_subplot(2, 1, 1)
+        ax0.set_xscale('log')
+        ax0.set_yscale('log')
+        ax0.set_ylabel('Gain')
+        ax0.grid()
+
+        ax1 = fig.add_subplot(2, 1, 2)
+        ax1.set_xscale('log')
+        ax1.set_xlabel('Angular frequency')
+        ax1.set_ylabel('Phase shift (degrees)')
+        ax1.grid()
+    else:
+        ax0, ax1 = axes
+
+    label=None
+    if kwargs:
+        label=','.join(f'{k}={v}' for k, v in kwargs.items())
+
+    ax0.plot(w, magnitude(w, **kwargs), label=None)
+    ax1.plot(w, argument(w, **kwargs) * 180 / np.pi, label=label)
+    if label is not None:
+        ax1.legend()
+
+    return ax0, ax1
+
 if __name__ == '__main__':
     _test_one_shot()
