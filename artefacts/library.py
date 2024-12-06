@@ -264,6 +264,9 @@ def bode(magnitude, argument, axes=None, lo=1e-2, hi=1e5, **kwargs):
         ax1.set_xscale('log')
         ax1.set_xlabel('Angular frequency')
         ax1.set_ylabel('Phase shift (degrees)')
+        ax1.set_ylim(-195, 195)
+        ax1.set_yticks([-180, -90, 0, 90, 180])
+
         ax1.grid()
     else:
         ax0, ax1 = axes

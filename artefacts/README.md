@@ -14,17 +14,21 @@ The first notebook describes the uncompensated patch-clamp set up, and shows how
 
 In the second notebook we update the model to include the compensation circuitry commonly used in patch-clamp amplifiers.
 
-## Simulating a manual patch clamp experiment [![github](../img/github.svg)](artefacts-3-simulations.ipynb) [![nbviewer](../img/nbviewer.svg)](https://nbviewer.jupyter.org/github/CardiacModelling/fitting-notebooks/tree/artefacts/artefacts/artefacts-3-simulations.ipynb)
+## Modelling filters [![github](../img/github.svg)](artefacts-3-filtering.ipynb) [![nbviewer](../img/nbviewer.svg)](https://nbviewer.jupyter.org/github/CardiacModelling/fitting-notebooks/tree/artefacts/artefacts/artefacts-3-filtering.ipynb)
 
 (Unfinished) In this notebook, we walk through the steps of a manual patch-clamp experiment.
 
-## Simplified models [![github](../img/github.svg)](artefacts-4-simplified.ipynb) [![nbviewer](../img/nbviewer.svg)](https://nbviewer.jupyter.org/github/CardiacModelling/fitting-notebooks/tree/artefacts/artefacts/artefacts-4-simplified.ipynb)
+## Simulating a manual patch clamp experiment [![github](../img/github.svg)](artefacts-4-simulations.ipynb) [![nbviewer](../img/nbviewer.svg)](https://nbviewer.jupyter.org/github/CardiacModelling/fitting-notebooks/tree/artefacts/artefacts/artefacts-4-simulations.ipynb)
 
-In notebook number four we derive simplified models of the compensated voltage clamp setup, which can be used in fitting.
+(Unfinished) In this notebook, we walk through the steps of a manual patch-clamp experiment.
 
-## Summary [![github](../img/github.svg)](artefacts-5-summary.ipynb) [![nbviewer](../img/nbviewer.svg)](https://nbviewer.jupyter.org/github/CardiacModelling/fitting-notebooks/tree/artefacts/artefacts/artefacts-5-summary.ipynb)
+## Simplified models [![github](../img/github.svg)](artefacts-5-simplified.ipynb) [![nbviewer](../img/nbviewer.svg)](https://nbviewer.jupyter.org/github/CardiacModelling/fitting-notebooks/tree/artefacts/artefacts/artefacts-5-simplified.ipynb)
 
-Finally, we present two simplified models (with currents in pA and currents in A/F), in equation & Myokit form.
+(Unfinished) In notebook number five we derive simplified models of the compensated voltage clamp setup, which can be used in fitting.
+
+## Summary [![github](../img/github.svg)](artefacts-6-summary.ipynb) [![nbviewer](../img/nbviewer.svg)](https://nbviewer.jupyter.org/github/CardiacModelling/fitting-notebooks/tree/artefacts/artefacts/artefacts-6-summary.ipynb)
+
+(Unfinished) Finally, we present two simplified models (with currents in pA and currents in A/F), in equation & Myokit form.
 
 ## Appendices
 
